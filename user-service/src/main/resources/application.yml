@@ -1,0 +1,16 @@
+server:
+  port: 0  #random port 사용을 위해 0으로 설정
+
+spring:
+  applcation:
+    name: user-service  #애플리케이션 name 설정
+
+eureka:
+  instance:
+    #Eureka Dashboard 에 출력할 instance id 설정. random port를 display
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    register-with-eureka: true  #Eureka의 registry에 등록하도록 true 지정
+    fetch-registry: true  #Eureka 서버로 부터 인스턴스들의 정보를 주기적으로 가져오도록 true 지정
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka  #Eureka Server 에 등록하기 위한 endpoint 지정
