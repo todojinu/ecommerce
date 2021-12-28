@@ -2,8 +2,15 @@ server:
   port: 0  #random port 사용을 위해 0으로 설정
 
 spring:
-  applcation:
+  application:
     name: user-service  #애플리케이션 name 설정
+  #h2 Database 설정 추가
+  h2:
+    console:
+      enabled: true  #h2 Console 사용
+      settings:
+        web-allow-others: true  #외부에서 접속을 허용하도록 설정
+      path: /h2-console  #웹 브라우져에서 콘솔에 접속하기 위한 주소. path 작성하지 않은 경우 /h2-console 로 접속가능
 
 eureka:
   instance:
@@ -14,3 +21,7 @@ eureka:
     fetch-registry: true  #Eureka 서버로 부터 인스턴스들의 정보를 주기적으로 가져오도록 true 지정
     service-url:
       defaultZone: http://127.0.0.1:8761/eureka  #Eureka Server 에 등록하기 위한 endpoint 지정
+
+#환경변수를 자바코드에서 사용해보기 위해 임의의 설정정보 작성
+greeting:
+  message: Welcome to the user-service.

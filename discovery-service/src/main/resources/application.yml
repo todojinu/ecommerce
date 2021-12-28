@@ -10,3 +10,6 @@ eureka:
     #Eureka Client가 아닌 Eureka Server로 동작할 것이므로 registry에 등록하지 않도록 설정
     register-with-eureka: false
     fetch-registry: false
+  server:
+    #enableSelfPreservation: false  #자기보존모드 비활성화
+    #response-cache-update-interval-ms: 3000
