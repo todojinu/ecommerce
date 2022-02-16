@@ -54,6 +54,25 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<!-- 모델의 유효성 체크를 도와주는 Jakarta validation 의존성 추가 -->
+		<dependency>
+			<groupId>jakarta.validation</groupId>
+			<artifactId>jakarta.validation-api</artifactId>
+		</dependency>
+
+		<!-- JPA 라이브러리 추가  -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+
+		<!-- 하나의 클래스가 가진정보를 다른 클래스로 매핑 변환시켜주는 ModelMapper 라이브러리 추가 -->
+		<dependency>
+			<groupId>org.modelmapper</groupId>
+			<artifactId>modelmapper</artifactId>
+			<version>2.3.8</version>
+		</dependency>
+
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
