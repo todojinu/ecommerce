@@ -6,6 +6,7 @@ import com.example.userservice.jpa.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -13,8 +14,19 @@ import java.util.UUID;
 @Service  // Bean으로 등록
 public class UserServiceImpl implements UserService {
 
-    @Autowired
+    //@Autowired
     UserRepository userRepository;
+    BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    //생성사 주입: 생성자가 Spring Context에 의해서 만들어지면서 만들어 놓은 Bean들을 주입하여 메모리에 등록하여 사용가능한 상태로
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.userRepository = userRepository;
+
+        //BCryptPasswordEncoder 클래스는 Bean으로 등록되어 있지 않으므로 "No beans of 'BCryptPasswordEncoder'" 오류 발생
+        //-> 가장 먼저 호출되는 Spring Application의 기동 클래스(UserServiceApplication)에서 해당하는 Bean을 등록할 수 있다.
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
 
     @Override
     public UserDto createUser(UserDto userDto) {
@@ -31,7 +43,7 @@ public class UserServiceImpl implements UserService {
         mapper.getConfiguration()                                 //매칭할수 있는 설정정보를 setting
                 .setMatchingStrategy(MatchingStrategies.STRICT);  //매칭전략설정
         UserEntity userEntity = mapper.map(userDto, UserEntity.class);  //UserDto를 UserEntity로 변환
-        userEntity.setEncryptedPwd("encrypted_password");  //TODO: 추후 암호화 기능 구현
+        userEntity.setEncryptedPwd(bCryptPasswordEncoder.encode(userDto.getPwd()));
 
         userRepository.save(userEntity);
 

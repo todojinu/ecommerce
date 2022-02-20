@@ -73,6 +73,13 @@
 			<version>2.3.8</version>
 		</dependency>
 
+		<!-- 인증 및 권한작업을 위한 Spring Security 라이브러리 추가 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>

@@ -4,6 +4,7 @@ import com.example.userservice.dto.UserDto;
 import com.example.userservice.service.UserService;
 import com.example.userservice.vo.Greeting;
 import com.example.userservice.vo.RequestUser;
+import com.example.userservice.vo.ResponseUser;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,7 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<RequestUser> createUser(@RequestBody RequestUser user) {  //POST 방식은 RequestBody 형태로 받는다
+    public ResponseEntity<ResponseUser> createUser(@RequestBody RequestUser user) {  //POST 방식은 RequestBody 형태로 받는다
         //ModelMapper를 사용한 객체 매핑
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -53,10 +54,10 @@ public class UserController {
 
         userService.createUser(userDto);
 
-        RequestUser requestUser = mapper.map(userDto, RequestUser.class);  //UserDto -> RequestUser
+        ResponseUser responseUser = mapper.map(userDto, ResponseUser.class);  //UserDto -> RequestUser
 
         return ResponseEntity.status(HttpStatus.CREATED)  //ResponseEntity에 CREATED(201) 성공 코드를 반환. *RestAPI를 개발할 때에는 적절한 상태코드를 반환하는 것이 좋음*
-                .body(requestUser);  //requestUser를 responseBody로 전달
+                .body(responseUser);  //requestUser를 responseBody로 전달
     }
 
 }
