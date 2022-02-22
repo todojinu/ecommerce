@@ -1,0 +1,24 @@
+server:
+  port: 8000
+
+# Eureka Service Discovery 에 Client 로 등록하기 위한 설정 추가
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+spring:
+  application:
+    name: apigateway-service
+  cloud:
+    #Gateway 설정
+    gateway:
+      #라우팅 정보 등록
+      routes:
+        #user-service
+        - id: user-service
+          uri: lb://USER-SERVICE  #eureka 에 등록한 서비스 이름
+          predicates:
+            - Path=/user-service/**  #"/user-service" 로 들어오는 모든 요청을 USER-SERVICE 로 포워딩
