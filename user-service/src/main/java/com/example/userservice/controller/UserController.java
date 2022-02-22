@@ -20,10 +20,11 @@ public class UserController {
     private Environment env;  //Environment를 활용한 환경변수 사용
     private UserService userService;
 
+    //생성자주입
     @Autowired
     public UserController(Environment env, UserService userService) {
         this.env = env;
-        this.userService = userService;  //생성자주입
+        this.userService = userService;
     }
 
 //    @GetMapping("/welcome")
@@ -41,7 +42,8 @@ public class UserController {
 
     @GetMapping("/health_check")
     public String status() {
-        return "It's Working in User Service";
+        return String.format("It's Working in User Service on POST %s"
+                , env.getProperty("local.server.port"));  //할당된 random port 번호를 환경변수에서 가져옴
     }
 
     @PostMapping("/users")
