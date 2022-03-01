@@ -12,7 +12,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     //권한 작업을 위해 재정의 해야하는 configure 메소드
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable();
+        http.csrf().disable();  //csrf(Cross Site Request Forgery) protection 기능 disabled
+                                //REST API를 이용한 서버는 session 기반 인증과는 다르게 stateless 하기떄문에 서버에 인증정보를 보관하지 않음
+                                //따라서, 불필요한 csrf 코드 작성이 불필요
         http.authorizeRequests()  //사용할 수 있는 작업을 제한
                 .antMatchers("/users/**").permitAll();  // "/users/" 로 시작하는 모든 요청은 통과시킴
 
