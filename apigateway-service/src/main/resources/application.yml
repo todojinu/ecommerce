@@ -26,3 +26,7 @@ spring:
           uri: lb://CATALOG-SERVICE
           predicates:
             - Path=/catalog-service/**  #"/catalog-service" 로 들어오는 모든 요청을 CATALOG-SERVICE 로 포워딩
+        - id: order-service
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/order-service/**  #"/order-service" 로 들어오는 모든 요청을 ORDER-SERVICE 로 포워딩
