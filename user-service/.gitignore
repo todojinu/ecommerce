@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### 기타 ###
+userinfo.properties

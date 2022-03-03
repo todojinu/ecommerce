@@ -18,10 +18,37 @@ spring:
       #라우팅 정보 등록
       routes:
         #user-service
+#        - id: user-service
+#          uri: lb://USER-SERVICE  #eureka 에 등록한 서비스 이름
+#          predicates:
+#            - Path=/user-service/**  #"/user-service" 로 들어오는 모든 요청을 USER-SERVICE 로 포워딩
+        #인증처리 기능 추가에 따른 user-service routes 정보 변경
         - id: user-service
-          uri: lb://USER-SERVICE  #eureka 에 등록한 서비스 이름
+          uri: lb://USER-SERVICE
           predicates:
-            - Path=/user-service/**  #"/user-service" 로 들어오는 모든 요청을 USER-SERVICE 로 포워딩
+            - Path=/user-service/login  #"/login"은 SpringSecurity에서 제공해주는 API임
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie  #POST로 전달되는 데이터를 매번 새롭게 인식하기 위해  RequestHeader를 초기화
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}  #클라이언트에서 들어온 경로를 변경하여 라우트
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            #POST로 요청되는 /user-service/users API
+            - Path=/user-service/users
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie  #POST로 전달되는 데이터를 매번 새롭게 인식하기 위해  RequestHeader를 초기화
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}  #클라이언트에서 들어온 경로를 변경하여 라우트
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            #GET으로 요청되는 "/user-service/"로 시작하는는API
+            - Path=/user-service/**
+            - Method=GET
+          filters:
+            - RemoveRequestHeader=Cookie  #POST로 전달되는 데이터를 매번 새롭게 인식하기 위해  RequestHeader를 초기화
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}  #클라이언트에서 들어온 경로를 변경하여 라우트
         - id: catalog-service
           uri: lb://CATALOG-SERVICE
           predicates:

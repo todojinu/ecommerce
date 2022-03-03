@@ -32,3 +32,13 @@ eureka:
 #환경변수를 자바코드에서 사용해보기 위해 임의의 설정정보 작성
 greeting:
   message: Welcome to the user-service.
+
+#로그레벨 설정
+logging:
+  level:
+    com.example.userservice: DEBUG
+
+#token 설정
+token:
+  expiration_time: 86400000  #토큰 만료 시간. 60*60*24*1000 = 86400000 밀리세컨드 = 하루
+  secret: user_token #token 생성시 조합되는 문자
