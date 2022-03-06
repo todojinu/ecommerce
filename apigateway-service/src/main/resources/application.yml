@@ -50,6 +50,15 @@ spring:
             - RemoveRequestHeader=Cookie  #POST로 전달되는 데이터를 매번 새롭게 인식하기 위해  RequestHeader를 초기화
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}  #클라이언트에서 들어온 경로를 변경하여 라우트
             - AuthorizationHeaderFilter  #인가를 위해 생성한 Filter 추가
+        #GET, POST로 요청되는 '/user-service/actuator/**' 요청에 대해 '/actuator/**' 로 포워딩
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/actuator/**
+            - Method=GET,POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
         - id: catalog-service
           uri: lb://CATALOG-SERVICE
           predicates:
@@ -62,6 +71,13 @@ spring:
       default-filters:
         - name: GlobalFilter
 
-#token 정보
-token:
-  secret: user_token  #private key
+# token 정보 -> configuration server에서 읽어오도록 변경
+#token:
+#  secret: user_token  #private key
+
+# Actuator 에서 사용할 end point 구성
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans, httptrace  # httptrace를 사용하기 위해 Application 클래스에 Bean을 등록

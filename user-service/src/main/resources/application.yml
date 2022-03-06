@@ -38,7 +38,14 @@ logging:
   level:
     com.example.userservice: DEBUG
 
-#token 설정
-token:
-  expiration_time: 86400000  #토큰 만료 시간. 60*60*24*1000 = 86400000 밀리세컨드 = 하루
-  secret: user_token #token 생성시 조합되는 문자
+#token 설정 -> Spring Cloud Config 서버에서 관리
+#token:
+#  expiration_time: 86400000  #토큰 만료 시간. 60*60*24*1000 = 86400000 밀리세컨드 = 하루
+#  secret: user_token #token 생성시 조합되는 문자
+
+#Actuator 설정 추가
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans  # refresh: config server에서 가져와야할 config 정보를 refresh

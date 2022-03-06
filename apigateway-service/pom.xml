@@ -51,6 +51,22 @@
 			<artifactId>jaxb-api</artifactId>
 		</dependency>
 
+		<!-- Spring Cloud Config 서비스로 부터 설정정보를 받아 사용하기 위한 Dependency 추가 -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-config</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-bootstrap</artifactId>
+		</dependency>
+
+		<!-- Application 상태, 모니터링, config 정보 refresh 를 위한 Dependency 추가 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>

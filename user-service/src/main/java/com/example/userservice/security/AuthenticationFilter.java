@@ -68,11 +68,11 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         //토큰 생성시 사용할 userId 조회
         //log.debug(((User)authResult.getPrincipal()).getUsername());
         String userName = ((User)authResult.getPrincipal()).getUsername();
-        UserDto userDtails = userService.getUserDetailsByEmail(userName);
+        UserDto userDetails = userService.getUserDetailsByEmail(userName);
 
         //JWT 토큰 생성
         String token = Jwts.builder()
-                .setSubject(userDtails.getUserId())  //userId를 사용해 토큰 생성
+                .setSubject(userDetails.getUserId())  //userId를 사용해 토큰 생성
                 //만료시간설정 -> 현재시간+만료기간
                 .setExpiration(new Date(System.currentTimeMillis() +
                         Long.parseLong(env.getProperty("token.expiration_time"))))  //yml 파일에서 가져오는 값은 모두 String
@@ -80,7 +80,6 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .compact();
 
         response.addHeader("token", token);
-        response.addHeader("userId", userDtails.getUserId());
-
+        response.addHeader("userId", userDetails.getUserId());
     }
 }

@@ -9,6 +9,7 @@ import com.example.userservice.vo.ResponseUser;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,8 +46,11 @@ public class UserController {
 
     @GetMapping("/health_check")
     public String status() {
-        return String.format("It's Working in User Service on POST %s"
-                , env.getProperty("local.server.port"));  //할당된 random port 번호를 환경변수에서 가져옴
+        return String.format("It's Working in User Service"
+                + ", port(local.server.port)=" + env.getProperty("local.server.port")  //할당된 random port 번호
+                + ", port(server.port)=" + env.getProperty("server.port")
+                + ", token secret= " + env.getProperty("token.secret")
+                + ", token expiration time=" + env.getProperty("token.expiration_time"));
     }
 
     @PostMapping("/users")

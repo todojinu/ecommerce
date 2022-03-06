@@ -9,3 +9,4 @@ spring:
       server:
         git:
           uri: file:///C:\dev\git-local-repo
+

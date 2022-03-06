@@ -9,8 +9,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.Properties;
-
 @Configuration  //Bean으로 등록. 다른 Bean들 보다 우선적으로 Spring Context에 등록됨
 @EnableWebSecurity  //클래스를 WebSecurity 용도로 사용하기 위한 어노테이션 추가
 public class WebSecurity extends WebSecurityConfigurerAdapter {
@@ -43,18 +41,14 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         //- 따라서, 불필요한 csrf 코드 작성이 불필요
         http.csrf().disable();
 
-        //테스트를 위한 ip를 가져오는 코드
-        Properties prop = new Properties();
-        prop.load(getClass().getClassLoader().getResourceAsStream("userinfo.properties"));
-        String testIp = prop.getProperty("user.ip");
-
         http.authorizeRequests()  //사용할 수 있는 작업을 제한
-                .antMatchers("/**")  //모든 작업에 대해
-                .hasIpAddress(testIp)  //통과시키고 싶은 ip를 설정
-                .and()  //추가 작업 설정시 and() 메소드 호출 후 추가
-                .addFilter(getAuthenticationFilter());  //인증을 위한 필터 추가
-
 //                .antMatchers("/users/**").permitAll();  // "/users/" 로 시작하는 모든 요청은 통과시킴
+                .antMatchers("/**")  //모든 작업에 대해
+                .hasIpAddress(env.getProperty("gateway.ip"))  //gateway ip를 설정
+                .and()  //추가 작업 설정시 and() 메소드 호출 후 추가
+                .addFilter(getAuthenticationFilter());  //인증을 위한 필터 추가. /login 요청시 필터 동작
+
+        http.authorizeRequests().antMatchers("/actuator/**").permitAll();  // "/actuator/..." 요청 통과
 
         // spring security 추가 후 h2-console 사용을 위한 코드
         http.headers().frameOptions().disable();  //iFrame을 사용하는 페이지에서 "'X-Frame-Options' to 'deny'" 오류를 방지.
