@@ -4,12 +4,16 @@ server:
 spring:
   application:
     name: config-service
+  profiles:
+    active: native  # profiles.active=native 를 설정하면 git은 무시됨. profiles.active 지정하지 않는 경우 git 정보가 default
   cloud:
     config:
       server:
+        native:
+          search-locations: file:///C:\dev\native-file-repo  # native file system 과 연동
         git:
-          #uri: file:///C:\dev\git-local-repo  # git repository 와 연동 되도록 변경
-          uri: https://github.com/todojinu/spring-cloud-config  # url을 입력하여 git repository와 연동
+          #uri: file:///C:\dev\git-local-repo  # git local repository 와 연동
+          uri: https://github.com/todojinu/spring-cloud-config  # git remote repository 와 연동
           #private repository인 경우 username과 password 추가
           #username: [your username]
           #password: [password]
