@@ -1,0 +1,2 @@
+encrypt:
+  key: abcde12345  #대칭키 암호화에 사용될 key

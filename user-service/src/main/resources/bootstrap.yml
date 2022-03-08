@@ -5,7 +5,8 @@ spring:
     config:
       uri: http://127.0.0.1:8888
       #name: ecommerce  # ecommerce.yml
-      name: config-service  # application.yml
+      #name: config-service  # application.yml
+      name: user-service  # user-service.yml
   # profile 설정 추가
 #  profiles:
 #    active: dev  # profile이 dev인 파일을 읽음

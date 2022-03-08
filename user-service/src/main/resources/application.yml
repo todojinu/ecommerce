@@ -11,11 +11,14 @@ spring:
       settings:
         web-allow-others: true  #외부에서 접속을 허용하도록 설정
       path: /h2-console  #웹 브라우져에서 콘솔에 접속하기 위한 주소. path 작성하지 않은 경우 디폴트로 /h2-console 로 접속가능
-  datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb  # database url 고정
-    #username: sa
-    #password: 1234
+
+  #암호화 처리후 Config Server에 저장
+#  datasource:
+#    driver-class-name: org.h2.Driver
+#    url: jdbc:h2:mem:testdb  # database url 고정
+#    username: sa
+#    password: 1234
+
   # Rabbit MQ 접속정보 추가
   rabbitmq:
     host: 127.0.0.1

@@ -41,7 +41,9 @@
 			<artifactId>spring-cloud-starter-bus-amqp</artifactId>
 		</dependency>
 
-		<!-- bootstrap 의 정보가 갱신이 되지 않는경우 방지를 위해 Bootstrap 추가  -->
+		<!-- bootstrap 의 정보가 갱신이 되지 않는경우 방지를 위해 Bootstrap 추가 -->
+        <!-- spring-cloud-starter-bootstrap 에는 spring-boot-starter, spring-cloud-context, -->
+		<!-- spring-cloud-commons, spring-security-rsa, spring-core 등이 포함 -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-bootstrap</artifactId>
