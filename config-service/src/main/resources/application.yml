@@ -17,3 +17,16 @@ spring:
           #private repository인 경우 username과 password 추가
           #username: [your username]
           #password: [password]
+  # Rabbit MQ 접속정보 추가
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+
+# Actuator end point 추가
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, busrefresh

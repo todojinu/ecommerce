@@ -70,6 +70,12 @@ spring:
       #GlobalFilter 설정
       default-filters:
         - name: GlobalFilter
+  # Rabbit MQ 접속정보 추가
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
 
 # token 정보 -> configuration server에서 읽어오도록 변경
 #token:
@@ -80,4 +86,4 @@ management:
   endpoints:
     web:
       exposure:
-        include: refresh, health, beans, httptrace  # httptrace를 사용하기 위해 Application 클래스에 Bean을 등록
+        include: refresh, health, beans, httptrace, busrefresh  # httptrace를 사용하기 위해 Application 클래스에 Bean을 등록
