@@ -1,2 +1,6 @@
 encrypt:
-  key: abcde12345  #대칭키 암호화에 사용될 key
+#  key: abcde12345  #대칭키 암호화에 사용될 key  # 비대칭 암호화로 변경
+  key-store:
+    location: file:///C:\dev\keystore\apiEncryptionKey.jks  # private key 파일 경로 지정
+    password: test1234  # 파일의 비밀번호
+    alias: apiEncryptionKey
