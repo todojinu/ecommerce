@@ -7,11 +7,16 @@ import com.example.userservice.vo.ResponseOrder;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,14 +29,25 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    Environment env;
+    RestTemplate restTemplate;
+
     //생성사 주입: 생성자가 Spring Context에 의해서 만들어지면서 만들어 놓은 Bean들을 주입하여 메모리에 등록하여 사용가능한 상태로
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserServiceImpl(UserRepository userRepository,
+                           BCryptPasswordEncoder bCryptPasswordEncoder,
+                           Environment env,
+                           RestTemplate restTemplate)
+    {
         this.userRepository = userRepository;
 
         //BCryptPasswordEncoder 클래스는 Bean으로 등록되어 있지 않으므로 "No beans of 'BCryptPasswordEncoder'" 오류 발생
         //-> 가장 먼저 호출되는 Spring Application의 기동 클래스(UserServiceApplication)에서 해당하는 Bean을 등록할 수 있다.
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+
+        this.env = env;
+
+        this.restTemplate = restTemplate;
     }
 
     @Override
@@ -68,8 +84,28 @@ public class UserServiceImpl implements UserService {
 
         UserDto userDto = new ModelMapper().map(userEntity, UserDto.class);
 
-        List<ResponseOrder> orders = new ArrayList<>();
-        userDto.setOrders(orders);
+//        List<ResponseOrder> orders = new ArrayList<>();
+//        userDto.setOrders(orders);
+
+        // RestTemplate 사용해 order-service를 호출하여 주문정보를 가져오도록 변경
+        String orderUrl = "";
+
+        // 방법 1.호출 서비스 주소 하드코딩
+        //orderUrl = "http://127.0.0.1:8000/order-service/%s/orders";
+
+        // 방법 2.호출 서비스 주소를 Config 파일에서 관리하고, Environment 객체를 이용해 주소값 get
+        orderUrl = env.getProperty("order-service.url");
+        orderUrl = String.format(orderUrl, userId);
+
+        ResponseEntity<List<ResponseOrder>> orderListResponse = restTemplate.exchange(
+                orderUrl,         // 서비스 주소
+                HttpMethod.GET,   // HTTP Method 방식
+                null,  // 요청 파라미터 타입
+                new ParameterizedTypeReference<List<ResponseOrder>>() {  // 응답파라미터타입
+        });
+
+        List<ResponseOrder> orderList = orderListResponse.getBody();
+        userDto.setOrders(orderList);
 
         return userDto;
     }
