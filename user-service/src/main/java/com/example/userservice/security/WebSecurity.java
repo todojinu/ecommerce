@@ -43,14 +43,14 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         //- 따라서, 불필요한 csrf 코드 작성이 불필요
         http.csrf().disable();
 
+        http.authorizeRequests().antMatchers("/actuator/**").permitAll();  // "/actuator/..." 요청 통과
+
         http.authorizeRequests()  //사용할 수 있는 작업을 제한
 //                .antMatchers("/users/**").permitAll();  // "/users/" 로 시작하는 모든 요청은 통과시킴
                 .antMatchers("/**")  //모든 작업에 대해
                 .hasIpAddress(env.getProperty("gateway.ip"))  //gateway ip를 설정
                 .and()  //추가 작업 설정시 and() 메소드 호출 후 추가
                 .addFilter(getAuthenticationFilter());  //인증을 위한 필터 추가. /login 요청시 필터 동작
-
-        http.authorizeRequests().antMatchers("/actuator/**").permitAll();  // "/actuator/..." 요청 통과
 
         // spring security 추가 후 h2-console 사용을 위한 코드
         http.headers().frameOptions().disable();  //iFrame을 사용하는 페이지에서 "'X-Frame-Options' to 'deny'" 오류를 방지.

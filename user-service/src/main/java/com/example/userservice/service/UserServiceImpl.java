@@ -1,5 +1,6 @@
 package com.example.userservice.service;
 
+import com.example.userservice.client.OrderServiceClient;
 import com.example.userservice.dto.UserDto;
 import com.example.userservice.jpa.UserEntity;
 import com.example.userservice.jpa.UserRepository;
@@ -30,14 +31,17 @@ public class UserServiceImpl implements UserService {
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
     Environment env;
-    RestTemplate restTemplate;
+//    RestTemplate restTemplate;  // Feign Client 사용으로 주석처리
+
+    OrderServiceClient orderServiceClient;  // orderService Feign Client Interface
 
     //생성사 주입: 생성자가 Spring Context에 의해서 만들어지면서 만들어 놓은 Bean들을 주입하여 메모리에 등록하여 사용가능한 상태로
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            BCryptPasswordEncoder bCryptPasswordEncoder,
                            Environment env,
-                           RestTemplate restTemplate)
+//                           RestTemplate restTemplate,  // Feign Client 사용으로 주석처리
+                           OrderServiceClient orderServiceClient)
     {
         this.userRepository = userRepository;
 
@@ -47,7 +51,9 @@ public class UserServiceImpl implements UserService {
 
         this.env = env;
 
-        this.restTemplate = restTemplate;
+//        this.restTemplate = restTemplate;  // Feign Client 사용으로 주석처리
+
+        this.orderServiceClient = orderServiceClient;
     }
 
     @Override
@@ -87,6 +93,13 @@ public class UserServiceImpl implements UserService {
 //        List<ResponseOrder> orders = new ArrayList<>();
 //        userDto.setOrders(orders);
 
+        /* User Feign Client */
+        List<ResponseOrder> orderList = orderServiceClient.getOrders(userId);
+
+        userDto.setOrders(orderList);
+
+        /* Using rest template */
+        /*
         // RestTemplate 사용해 order-service를 호출하여 주문정보를 가져오도록 변경
         String orderUrl = "";
 
@@ -106,6 +119,7 @@ public class UserServiceImpl implements UserService {
 
         List<ResponseOrder> orderList = orderListResponse.getBody();
         userDto.setOrders(orderList);
+         */
 
         return userDto;
     }
