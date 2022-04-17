@@ -1,5 +1,6 @@
 package com.example.userservice;
 
+import feign.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -31,5 +32,11 @@ public class UserServiceApplication {
 //	public RestTemplate getRestTemplate() {
 //		return new RestTemplate();
 //	}
+
+	// Feign Client 의 로그 출력을 위해 Logger.Level 을 Bean 으로 등록하기 위한 메소드 추가
+	@Bean
+	public Logger.Level feignLoggerLevel() {
+		return Logger.Level.FULL;
+	}
 
 }

@@ -46,6 +46,7 @@ greeting:
 logging:
   level:
     com.example.userservice: DEBUG
+    com.example.userservice.client: DEBUG  # Feign Client 로그 출력을 위한 로그레벨 설정
 
 #token 설정 -> Spring Cloud Config 서버에서 관리
 #token:
