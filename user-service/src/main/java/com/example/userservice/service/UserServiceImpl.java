@@ -5,6 +5,8 @@ import com.example.userservice.dto.UserDto;
 import com.example.userservice.jpa.UserEntity;
 import com.example.userservice.jpa.UserRepository;
 import com.example.userservice.vo.ResponseOrder;
+import feign.FeignException;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service  // Bean으로 등록
 public class UserServiceImpl implements UserService {
 
@@ -35,7 +38,7 @@ public class UserServiceImpl implements UserService {
 
     OrderServiceClient orderServiceClient;  // orderService Feign Client Interface
 
-    //생성사 주입: 생성자가 Spring Context에 의해서 만들어지면서 만들어 놓은 Bean들을 주입하여 메모리에 등록하여 사용가능한 상태로
+    //생성자 주입: 생성자가 Spring Context에 의해서 만들어지면서 만들어 놓은 Bean들을 주입하여 메모리에 등록하여 사용가능한 상태로
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            BCryptPasswordEncoder bCryptPasswordEncoder,
@@ -94,8 +97,19 @@ public class UserServiceImpl implements UserService {
 //        userDto.setOrders(orders);
 
         /* User Feign Client */
-        List<ResponseOrder> orderList = orderServiceClient.getOrders(userId);
+        /* Feign exception handling */
+//        List<ResponseOrder> orderList = null;
+//        try {
+//            orderList = orderServiceClient.getOrders(userId);
+//        } catch (FeignException ex) {
+//            log.error(ex.getMessage());
+//        }
+//
+//        userDto.setOrders(orderList);
 
+        // ErrorDecoder 를 사용한 예외처리
+        /* ErrorDecoder */
+        List<ResponseOrder> orderList = orderServiceClient.getOrders(userId);
         userDto.setOrders(orderList);
 
         /* Using rest template */

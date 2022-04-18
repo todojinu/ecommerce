@@ -12,7 +12,7 @@ import java.util.List;
 @FeignClient(name="order-service")  // 호출할 microservice 의 이름을 설정
 public interface OrderServiceClient {
 
-    @GetMapping("/order-service/{userId}/orders")
+    @GetMapping("/order-service/{userId}/orders_ng")
     List<ResponseOrder> getOrders(@PathVariable String userId);
 
 }
