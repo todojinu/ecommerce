@@ -41,9 +41,10 @@ public class UserServiceApplication {
 	}
 
 	// ErrorDecoder 인터페이스를 구현한 FeignErrorDecoder 사용을 위해 Bean으로 등록
-	@Bean
-	public FeignErrorDecoder feignErrorDecoder() {
-		return new FeignErrorDecoder();
-	}
+	// -> FeignErrorDecoder 에서 @Component로 등록 했으므로 주석처리
+//	@Bean
+//	public FeignErrorDecoder feignErrorDecoder() {
+//		return new FeignErrorDecoder();
+//	}
 
 }

@@ -2,6 +2,7 @@ package com.example.orderservice.controller;
 
 import com.example.orderservice.dto.OrderDto;
 import com.example.orderservice.jpa.OrderEntity;
+import com.example.orderservice.messagequeue.KafkaProducer;
 import com.example.orderservice.service.OrderService;
 import com.example.orderservice.vo.RequestOrder;
 import com.example.orderservice.vo.ResponseOrder;
@@ -20,11 +21,13 @@ import java.util.List;
 public class OrderContoller {
     Environment env;
     OrderService orderService;
+    KafkaProducer kafkaProducer;
 
     @Autowired
-    public OrderContoller(Environment env, OrderService orderService) {
+    public OrderContoller(Environment env, OrderService orderService, KafkaProducer kafkaProducer) {
         this.env = env;
         this.orderService = orderService;
+        this.kafkaProducer = kafkaProducer;
     }
 
     @GetMapping("/health_check")
@@ -33,15 +36,21 @@ public class OrderContoller {
     }
 
     @PostMapping("/{userId}/orders")
-    public ResponseEntity<ResponseOrder> createOrder (@PathVariable("userId") String userId, @RequestBody RequestOrder order) {
+    public ResponseEntity<ResponseOrder> createOrder (@PathVariable("userId") String userId,
+                                                      @RequestBody RequestOrder order) {
         ModelMapper mapper = new ModelMapper();
 
+        /* jpa 작업 */
         OrderDto orderDto = mapper.map(order, OrderDto.class);
         orderDto.setUserId(userId);
-
         orderService.createOrder(orderDto);
 
         ResponseOrder responseOrder = mapper.map(orderDto, ResponseOrder.class);
+
+        /* send this order to kafka */
+        // catalog service의 Kafka Listener에서 example-catalog-topic의 변경을 listen 한다.
+        // TODO: configration server를 이용해볼 것
+        kafkaProducer.sendOrder("example-catalog-topic", orderDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseOrder);
     }
