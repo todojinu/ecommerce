@@ -73,6 +73,7 @@ public class UserController {
     public ResponseEntity<List<ResponseUser>> getUsers() {
         Iterable<UserEntity> userList = userService.getUserByAll();
 
+
         List<ResponseUser> result = new ArrayList<>();
         ModelMapper modelMapper = new ModelMapper();
 

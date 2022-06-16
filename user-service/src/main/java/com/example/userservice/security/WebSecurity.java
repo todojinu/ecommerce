@@ -45,10 +45,13 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests().antMatchers("/actuator/**").permitAll();  // "/actuator/..." 요청 통과
 
+        // TODO: 요청 ip 필터 오류 수정 필요
         http.authorizeRequests()  //사용할 수 있는 작업을 제한
 //                .antMatchers("/users/**").permitAll();  // "/users/" 로 시작하는 모든 요청은 통과시킴
-                .antMatchers("/**")  //모든 작업에 대해
-                .hasIpAddress(env.getProperty("gateway.ip"))  //gateway ip를 설정
+//                .antMatchers("/**")  //모든 작업에 대해
+                .antMatchers("/users/**")  //모든 작업에 대해
+                .permitAll()
+//                .hasIpAddress(env.getProperty("gateway.ip"))  //gateway ip를 설정
                 .and()  //추가 작업 설정시 and() 메소드 호출 후 추가
                 .addFilter(getAuthenticationFilter());  //인증을 위한 필터 추가. /login 요청시 필터 동작
 
