@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
@@ -38,13 +40,17 @@ public class UserServiceImpl implements UserService {
 
     OrderServiceClient orderServiceClient;  // orderService Feign Client Interface
 
+    CircuitBreakerFactory circuitBreakerFactory;
+
+
     //생성자 주입: 생성자가 Spring Context에 의해서 만들어지면서 만들어 놓은 Bean들을 주입하여 메모리에 등록하여 사용가능한 상태로
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            BCryptPasswordEncoder bCryptPasswordEncoder,
                            Environment env,
 //                           RestTemplate restTemplate,  // Feign Client 사용으로 주석처리
-                           OrderServiceClient orderServiceClient)
+                           OrderServiceClient orderServiceClient,
+                           CircuitBreakerFactory circuitBreakerFactory)
     {
         this.userRepository = userRepository;
 
@@ -57,6 +63,8 @@ public class UserServiceImpl implements UserService {
 //        this.restTemplate = restTemplate;  // Feign Client 사용으로 주석처리
 
         this.orderServiceClient = orderServiceClient;
+
+        this.circuitBreakerFactory = circuitBreakerFactory;
     }
 
     @Override
@@ -107,9 +115,16 @@ public class UserServiceImpl implements UserService {
 //
 //        userDto.setOrders(orderList);
 
-        // ErrorDecoder 를 사용한 예외처리
+        // ErrorDecoder 를 사용한 예외처리 -> 아래 CircuitBreaker 사용을 위해 주석처리
         /* ErrorDecoder */
-        List<ResponseOrder> orderList = orderServiceClient.getOrders(userId);
+//        List<ResponseOrder> orderList = orderServiceClient.getOrders(userId);
+
+        // CircuitBreaker 생성
+        CircuitBreaker circuitBreaker = circuitBreakerFactory.create("circuitbreaker");
+        List<ResponseOrder> orderList =
+                circuitBreaker.run(() -> orderServiceClient.getOrders(userId),  // 정상적인 처리
+                throwable -> new ArrayList<>());  // 오류가 발생했을 때의 처리
+
         userDto.setOrders(orderList);
 
         /* Using rest template */
