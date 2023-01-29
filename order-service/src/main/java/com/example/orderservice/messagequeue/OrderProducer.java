@@ -18,9 +18,10 @@ public class OrderProducer {
     private KafkaTemplate<String, String> kafkaTemplate;
 
     // kafka 메시지 Field 정보 생성
-    List<Field> fields = Arrays.asList(new Field("string", true, "order_id"),
+    List<Field> fields = Arrays.asList(
             new Field("string", true, "user_id"),
-            new Field("string", true, "produce_id"),
+            new Field("string", true, "product_id"),
+            new Field("string", true, "order_id"),
             new Field("int32", true, "qty"),
             new Field("int32", true, "unit_price"),
             new Field("int32", true, "total_price"));

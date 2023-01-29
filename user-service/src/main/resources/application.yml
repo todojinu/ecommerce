@@ -4,6 +4,14 @@ server:
 spring:
   application:
     name: user-service  #애플리케이션 name 설정
+  #zipkin 설정 추가
+  zipkin:
+    base-url: http://127.0.0.1:9411
+    enabled: true
+  sleuth:
+    sampler:
+      probablity: 1.0  #얼마나 많은 비율(빈도수)로 zipkin에 트랜잭션을 전송할 것인지를 설정. 1.0 = 100%
+
   #h2 Database 설정 추가
   h2:
     console:
